@@ -3,6 +3,8 @@ require 'rubygems'
 require 'betabrite'
 require 'rake'
 
+require 'lib/chatter'
+
 namespace :betabrite do
   desc "Clear memory"
   task :clear_memory do
@@ -44,4 +46,16 @@ namespace :betabrite do
 
   desc "Restart sign"
   task :restart => [:clear_memory, :allocate, :initialize]
+
+  task :im do
+    Thread.abort_on_exception = true
+    client = Chatter::Chat.new(
+      'betabrite@jabber.org/ruby',
+      ENV['PASSWORD'],
+      [Chatter::Sink.new]
+    )
+    client.login
+    Thread.stop
+    client.close
+  end
 end
